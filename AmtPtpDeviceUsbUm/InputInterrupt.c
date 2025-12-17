@@ -536,6 +536,9 @@ AmtPtpServiceTouchInputInterruptType5(
 			// Pressure
 			PtpReport.Contacts[i].Pressure = f->Pressure;
 
+			// Contact Width
+			PtpReport.Contacts[i].Width = f->Size;
+
 #define UINT32_SET_MSB(v) ((UINT32)v | ((UINT32)1 << 31))
 
 			PPTP_REPORT_AUX prev_contact = NULL;
@@ -591,11 +594,11 @@ AmtPtpServiceTouchInputInterruptType5(
 
 #undef UINT32_SET_MSB
 
-//#ifdef INPUT_CONTENT_TRACE
+#ifdef INPUT_CONTENT_TRACE
 			TraceEvents(
 				TRACE_LEVEL_INFORMATION,
 				TRACE_INPUT,
-				"%!FUNC!: Point %llu, ContactID = %lu, X = %d, Y = %d, TipSwitch = %d, Confidence = %d, tMajor = %d, tMinor = %d, finger type = %d, rotate = %d, pressure = %d, size = %d",
+				"%!FUNC!: Point %llu, ContactID = %lu, X = %d, Y = %d, TipSwitch = %d, Confidence = %d, tMajor = %d, tMinor = %d, finger type = %d, rotate = %d, pressure = %d, contact width = %d",
 				i,
 				PtpReport.Contacts[i].ContactID,
 				PtpReport.Contacts[i].X,
@@ -607,9 +610,9 @@ AmtPtpServiceTouchInputInterruptType5(
 				f->Finger,
 				f->Orientation,
 				PtpReport.Contacts[i].Pressure,
-				f->Size
+				PtpReport.Contacts[i].Width
 			);
-//#endif
+#endif
 		}
 	}
 

@@ -16,6 +16,14 @@
 		INPUT, 0x03, /* Input: (Const, Var, Abs) */ \
 		/* End of a byte */ \
 		/* Begin a byte */ \
+		USAGE, 0x48, /* Usage: Width */ \
+		LOGICAL_MINIMUM, 0x00, /* Logical Minimum: 0 */ \
+		LOGICAL_MAXIMUM, 0xff, /* Logical Maximum: 255 */ \
+		REPORT_SIZE, 0x08, /* Report Size: 8 */ \
+		REPORT_COUNT, 0x01, /* Report Count: 1 */ \
+		INPUT, 0x02, /* Input: (Data, Var, Abs) */ \
+		/* End of a byte */ \
+		/* Begin a byte */ \
 		USAGE, 0x30, /* Usage: Pressure */ \
 		LOGICAL_MINIMUM, 0x00, /* Logical Minimum: 0 */ \
 		LOGICAL_MAXIMUM, 0xff, /* Logical Maximum: 255 */ \
@@ -66,6 +74,14 @@
 		/* End of a byte */ \
 		/* Begin a byte */ \
 		USAGE, 0x30, /* Usage: Pressure */ \
+		LOGICAL_MINIMUM, 0x00, /* Logical Minimum: 0 */ \
+		LOGICAL_MAXIMUM, 0xff, /* Logical Maximum: 255 */ \
+		REPORT_SIZE, 0x08, /* Report Size: 8 */ \
+		REPORT_COUNT, 0x01, /* Report Count: 1 */ \
+		INPUT, 0x02, /* Input: (Data, Var, Abs) */ \
+		/* End of a byte */ \
+		/* Begin a byte */ \
+		USAGE, 0x48, /* Usage: Width */ \
 		LOGICAL_MINIMUM, 0x00, /* Logical Minimum: 0 */ \
 		LOGICAL_MAXIMUM, 0xff, /* Logical Maximum: 255 */ \
 		REPORT_SIZE, 0x08, /* Report Size: 8 */ \

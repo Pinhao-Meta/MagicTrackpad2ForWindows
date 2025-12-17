@@ -148,6 +148,7 @@ typedef struct _PTP_CONTACT {
 	UCHAR		TipSwitch  : 1;
 	UCHAR		Padding    : 6;
 	UCHAR		Pressure;
+	UCHAR		Width;
 	ULONG		ContactID;
 	USHORT		X;
 	USHORT		Y;
