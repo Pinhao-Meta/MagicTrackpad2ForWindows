@@ -16,7 +16,6 @@ DEFINE_GUID(GUID_DEVINTERFACE_AmtPtpDevice,
 #define WPP_CONTROL_GUIDS													\
     WPP_DEFINE_CONTROL_GUID(												\
         AmtPtpDriverTraceGuid, (efc3ce99,43ff,4b59,afe4,c856e1afd8b0),		\
-																			\
         WPP_DEFINE_BIT(AMTPTPDRIVER_ALL_INFO)								\
         WPP_DEFINE_BIT(TRACE_DRIVER)										\
         WPP_DEFINE_BIT(TRACE_DEVICE)										\

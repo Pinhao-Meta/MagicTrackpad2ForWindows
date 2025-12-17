@@ -18,7 +18,7 @@ typedef struct _DEVICE_CONTEXT
 
 	USB_DEVICE_DESCRIPTOR       DeviceDescriptor;
 
-	const struct BCM5974_CONFIG *DeviceInfo;
+	const struct BCM5974_CONFIG* DeviceInfo;
 
 	ULONG                       UsbDeviceTraits;
 
@@ -42,7 +42,7 @@ typedef struct _DEVICE_CONTEXT
 	BOOL                        IgnoreNearFingers;
 	BOOL                        PalmRejection;
 
-} DEVICE_CONTEXT, *PDEVICE_CONTEXT;
+} DEVICE_CONTEXT, * PDEVICE_CONTEXT;
 
 //
 // This macro will generate an inline function called DeviceGetContext
@@ -212,14 +212,14 @@ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
 RequestGetHidXferPacketToReadFromDevice(
 	_In_  WDFREQUEST        Request,
-	_Out_ HID_XFER_PACKET  *Packet
+	_Out_ HID_XFER_PACKET* Packet
 );
 
 _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
 RequestGetHidXferPacketToWriteToDevice(
 	_In_  WDFREQUEST        Request,
-	_Out_ HID_XFER_PACKET  *Packet
+	_Out_ HID_XFER_PACKET* Packet
 );
 
 // Helper function for numberic operation

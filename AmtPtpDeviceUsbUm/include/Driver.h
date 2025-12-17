@@ -38,7 +38,7 @@ DriverTraceInit(
 	_In_ PUNICODE_STRING RegistryPath
 );
 
-VOID 
+VOID
 DriverTraceCleanup(
 	_In_ WDFOBJECT DriverObject
 );

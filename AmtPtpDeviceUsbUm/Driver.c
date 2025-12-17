@@ -24,10 +24,10 @@ DriverEntry(
 		DriverObject,
 		RegistryPath
 	);
-	
+
 	TraceEvents(
-		TRACE_LEVEL_INFORMATION, 
-		TRACE_DRIVER, 
+		TRACE_LEVEL_INFORMATION,
+		TRACE_DRIVER,
 		"%!FUNC! Entry"
 	);
 
@@ -51,9 +51,9 @@ DriverEntry(
 
 	if (!NT_SUCCESS(status)) {
 		TraceEvents(
-			TRACE_LEVEL_ERROR, 
-			TRACE_DRIVER, 
-			"%!FUNC! WdfDriverCreate failed %!STATUS!", 
+			TRACE_LEVEL_ERROR,
+			TRACE_DRIVER,
+			"%!FUNC! WdfDriverCreate failed %!STATUS!",
 			status
 		);
 		TraceLoggingWrite(
@@ -102,7 +102,7 @@ DriverTraceCleanup(
 
 	TraceLoggingUnregister(g_hAmtPtpDeviceTraceProvider);
 	// This actually directly calls WppCleanupUm() in UMDF drivers
-	WPP_CLEANUP(WdfDriverWdmGetDriverObject((WDFDRIVER) Driver));
+	WPP_CLEANUP(WdfDriverWdmGetDriverObject((WDFDRIVER)Driver));
 }
 
 NTSTATUS
@@ -114,27 +114,27 @@ AmtPtpDeviceEvtDeviceAdd(
 	NTSTATUS status = STATUS_SUCCESS;
 
 	TraceEvents(
-		TRACE_LEVEL_INFORMATION, 
-		TRACE_DRIVER, 
+		TRACE_LEVEL_INFORMATION,
+		TRACE_DRIVER,
 		"%!FUNC! Entry"
 	);
 
 	TraceEvents(
 		TRACE_LEVEL_INFORMATION,
-		TRACE_DRIVER, 
+		TRACE_DRIVER,
 		"%!FUNC! Set FDO driver filter"
 	);
 
 	WdfFdoInitSetFilter(DeviceInit);
 
 	status = AmtPtpCreateDevice(
-		Driver, 
+		Driver,
 		DeviceInit
 	);
 
 	TraceEvents(
-		TRACE_LEVEL_INFORMATION, 
-		TRACE_DRIVER, 
+		TRACE_LEVEL_INFORMATION,
+		TRACE_DRIVER,
 		"%!FUNC! Exit"
 	);
 	return status;
@@ -146,8 +146,8 @@ AmtPtpDeviceEvtDriverContextCleanup(
 )
 {
 	TraceEvents(
-		TRACE_LEVEL_INFORMATION, 
-		TRACE_DRIVER, 
+		TRACE_LEVEL_INFORMATION,
+		TRACE_DRIVER,
 		"%!FUNC! Entry"
 	);
 

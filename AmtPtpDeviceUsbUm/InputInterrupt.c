@@ -22,21 +22,21 @@ AmtPtpConfigContReaderForInterruptEndPoint(
 
 	switch (DeviceContext->DeviceInfo->tp_type)
 	{
-		case TYPE1:
-			transferLength = HEADER_TYPE1 + FSIZE_TYPE1 * MAX_FINGERS;
-			break;
-		case TYPE2:
-			transferLength = HEADER_TYPE2 + FSIZE_TYPE2 * MAX_FINGERS;
-			break;
-		case TYPE3:
-			transferLength = HEADER_TYPE3 + FSIZE_TYPE3 * MAX_FINGERS;
-			break;
-		case TYPE4:
-			transferLength = HEADER_TYPE4 + FSIZE_TYPE4 * MAX_FINGERS;
-			break;
-		case TYPE5:
-			transferLength = HEADER_TYPE5 + FSIZE_TYPE5 * MAX_FINGERS;
-			break;
+	case TYPE1:
+		transferLength = HEADER_TYPE1 + FSIZE_TYPE1 * MAX_FINGERS;
+		break;
+	case TYPE2:
+		transferLength = HEADER_TYPE2 + FSIZE_TYPE2 * MAX_FINGERS;
+		break;
+	case TYPE3:
+		transferLength = HEADER_TYPE3 + FSIZE_TYPE3 * MAX_FINGERS;
+		break;
+	case TYPE4:
+		transferLength = HEADER_TYPE4 + FSIZE_TYPE4 * MAX_FINGERS;
+		break;
+	case TYPE5:
+		transferLength = HEADER_TYPE5 + FSIZE_TYPE5 * MAX_FINGERS;
+		break;
 	}
 
 	if (transferLength <= 0) {
@@ -92,7 +92,7 @@ AmtPtpEvtUsbInterruptPipeReadComplete(
 
 	WDFDEVICE       device;
 	PDEVICE_CONTEXT pDeviceContext = Context;
-	UCHAR*			pBuffer = NULL;
+	UCHAR* pBuffer = NULL;
 	NTSTATUS        status;
 
 	TraceEvents(
@@ -102,8 +102,8 @@ AmtPtpEvtUsbInterruptPipeReadComplete(
 	);
 
 	device = WdfObjectContextGetObject(pDeviceContext);
-	size_t headerSize = (unsigned int) pDeviceContext->DeviceInfo->tp_header;
-	size_t fingerprintSize = (unsigned int) pDeviceContext->DeviceInfo->tp_fsize;
+	size_t headerSize = (unsigned int)pDeviceContext->DeviceInfo->tp_header;
+	size_t fingerprintSize = (unsigned int)pDeviceContext->DeviceInfo->tp_fsize;
 
 	if (NumBytesTransferred < headerSize || (NumBytesTransferred - headerSize) % fingerprintSize != 0) {
 
@@ -142,64 +142,64 @@ AmtPtpEvtUsbInterruptPipeReadComplete(
 
 	// Dispatch USB Interrupt routine by device family
 	switch (pDeviceContext->DeviceInfo->tp_type) {
-		case TYPE1:
-		{
+	case TYPE1:
+	{
+		TraceEvents(
+			TRACE_LEVEL_WARNING,
+			TRACE_DRIVER,
+			"%!FUNC! Mode not yet supported"
+		);
+		break;
+	}
+	// Universal routine handler
+	case TYPE2:
+	case TYPE3:
+	case TYPE4:
+	{
+		pBuffer = WdfMemoryGetBuffer(
+			Buffer,
+			NULL
+		);
+
+		status = AmtPtpServiceTouchInputInterrupt(
+			pDeviceContext,
+			pBuffer,
+			NumBytesTransferred
+		);
+
+		if (!NT_SUCCESS(status)) {
 			TraceEvents(
 				TRACE_LEVEL_WARNING,
 				TRACE_DRIVER,
-				"%!FUNC! Mode not yet supported"
+				"%!FUNC! AmtPtpServiceTouchInputInterrupt failed with %!STATUS!",
+				status
 			);
-			break;
 		}
-		// Universal routine handler
-		case TYPE2:
-		case TYPE3:
-		case TYPE4:
-		{
-			pBuffer = WdfMemoryGetBuffer(
-				Buffer,
-				NULL
-			);
+		break;
+	}
+	// Magic Trackpad 2
+	case TYPE5:
+	{
+		pBuffer = WdfMemoryGetBuffer(
+			Buffer,
+			NULL
+		);
+		status = AmtPtpServiceTouchInputInterruptType5(
+			pDeviceContext,
+			pBuffer,
+			NumBytesTransferred
+		);
 
-			status = AmtPtpServiceTouchInputInterrupt(
-				pDeviceContext,
-				pBuffer,
-				NumBytesTransferred
+		if (!NT_SUCCESS(status)) {
+			TraceEvents(
+				TRACE_LEVEL_WARNING,
+				TRACE_DRIVER,
+				"%!FUNC! AmtPtpServiceTouchInputInterrupt5 failed with %!STATUS!",
+				status
 			);
-
-			if (!NT_SUCCESS(status)) {
-				TraceEvents(
-					TRACE_LEVEL_WARNING,
-					TRACE_DRIVER,
-					"%!FUNC! AmtPtpServiceTouchInputInterrupt failed with %!STATUS!",
-					status
-				);
-			}
-			break;
 		}
-		// Magic Trackpad 2
-		case TYPE5:
-		{
-			pBuffer = WdfMemoryGetBuffer(
-				Buffer,
-				NULL
-			);
-			status = AmtPtpServiceTouchInputInterruptType5(
-				pDeviceContext,
-				pBuffer,
-				NumBytesTransferred
-			);
-
-			if (!NT_SUCCESS(status)) {
-				TraceEvents(
-					TRACE_LEVEL_WARNING,
-					TRACE_DRIVER,
-					"%!FUNC! AmtPtpServiceTouchInputInterrupt5 failed with %!STATUS!",
-					status
-				);
-			}
-			break;
-		}
+		break;
+	}
 	}
 
 	TraceEvents(
@@ -240,7 +240,7 @@ AmtPtpServiceTouchInputInterrupt(
 	LARGE_INTEGER CurrentPerfCounter;
 	LONGLONG PerfCounterDelta;
 
-	const struct TRACKPAD_FINGER *f;
+	const struct TRACKPAD_FINGER* f;
 
 	TraceEvents(
 		TRACE_LEVEL_INFORMATION,
@@ -249,8 +249,8 @@ AmtPtpServiceTouchInputInterrupt(
 	);
 
 	size_t raw_n, i = 0;
-	size_t headerSize = (unsigned int) DeviceContext->DeviceInfo->tp_header;
-	size_t fingerprintSize = (unsigned int) DeviceContext->DeviceInfo->tp_fsize;
+	size_t headerSize = (unsigned int)DeviceContext->DeviceInfo->tp_header;
+	size_t fingerprintSize = (unsigned int)DeviceContext->DeviceInfo->tp_fsize;
 	USHORT x = 0, y = 0;
 
 	Status = STATUS_SUCCESS;
@@ -284,7 +284,7 @@ AmtPtpServiceTouchInputInterrupt(
 		PerfCounterDelta = 0xFF;
 	}
 
-	PtpReport.ScanTime = (USHORT) PerfCounterDelta;
+	PtpReport.ScanTime = (USHORT)PerfCounterDelta;
 
 	// Allocate output memory.
 	Status = WdfRequestRetrieveOutputMemory(
@@ -307,7 +307,7 @@ AmtPtpServiceTouchInputInterrupt(
 		// Handles trackpad surface report here.
 		raw_n = (NumBytesTransferred - headerSize) / fingerprintSize;
 		if (raw_n >= PTP_MAX_CONTACT_POINTS) raw_n = PTP_MAX_CONTACT_POINTS;
-		PtpReport.ContactCount = (UCHAR) raw_n;
+		PtpReport.ContactCount = (UCHAR)raw_n;
 
 #ifdef INPUT_CONTENT_TRACE
 		TraceEvents(
@@ -321,18 +321,18 @@ AmtPtpServiceTouchInputInterrupt(
 		// Fingers
 		for (i = 0; i < raw_n; i++) {
 
-			UCHAR *f_base = Buffer + headerSize + DeviceContext->DeviceInfo->tp_delta;
-			f = (const struct TRACKPAD_FINGER*) (f_base + i * fingerprintSize);
+			UCHAR* f_base = Buffer + headerSize + DeviceContext->DeviceInfo->tp_delta;
+			f = (const struct TRACKPAD_FINGER*)(f_base + i * fingerprintSize);
 
 			// Translate X and Y
-			x = (AmtRawToInteger(f->abs_x) - DeviceContext->DeviceInfo->x.min) > 0 ? 
+			x = (AmtRawToInteger(f->abs_x) - DeviceContext->DeviceInfo->x.min) > 0 ?
 				((USHORT)(AmtRawToInteger(f->abs_x) - DeviceContext->DeviceInfo->x.min)) : 0;
-			y = (DeviceContext->DeviceInfo->y.max - AmtRawToInteger(f->abs_y)) > 0 ? 
+			y = (DeviceContext->DeviceInfo->y.max - AmtRawToInteger(f->abs_y)) > 0 ?
 				((USHORT)(DeviceContext->DeviceInfo->y.max - AmtRawToInteger(f->abs_y))) : 0;
 
 			// Defuzz functions remain the same
 			// TODO: Implement defuzz later
-			PtpReport.Contacts[i].ContactID = (UCHAR) i;
+			PtpReport.Contacts[i].ContactID = (UCHAR)i;
 			PtpReport.Contacts[i].X = x;
 			PtpReport.Contacts[i].Y = y;
 			PtpReport.Contacts[i].TipSwitch = (AmtRawToInteger(f->touch_major) << 1) >= 200;
@@ -351,7 +351,7 @@ AmtPtpServiceTouchInputInterrupt(
 				AmtRawToInteger(f->touch_major) << 1,
 				AmtRawToInteger(f->touch_minor) << 1,
 				AmtRawToInteger(f->origin),
-				(UCHAR) i
+				(UCHAR)i
 			);
 #endif
 		}
@@ -369,7 +369,7 @@ AmtPtpServiceTouchInputInterrupt(
 	Status = WdfMemoryCopyFromBuffer(
 		RequestMemory,
 		0,
-		(PVOID) &PtpReport,
+		(PVOID)&PtpReport,
 		sizeof(PTP_REPORT)
 	);
 
@@ -424,8 +424,8 @@ AmtPtpServiceTouchInputInterruptType5(
 	const struct TRACKPAD_COMBINED_REPORT_TYPE5* full_report;
 
 	TraceEvents(
-		TRACE_LEVEL_INFORMATION, 
-		TRACE_DRIVER, 
+		TRACE_LEVEL_INFORMATION,
+		TRACE_DRIVER,
 		"%!FUNC! Entry"
 	);
 
@@ -444,33 +444,33 @@ AmtPtpServiceTouchInputInterruptType5(
 
 	if (!NT_SUCCESS(Status)) {
 		TraceEvents(
-			TRACE_LEVEL_INFORMATION, 
-			TRACE_DRIVER, 
+			TRACE_LEVEL_INFORMATION,
+			TRACE_DRIVER,
 			"%!FUNC! No pending PTP request. Interrupt disposed"
 		);
 		goto exit;
 	}
 
 	Status = WdfRequestRetrieveOutputMemory(
-		Request, 
+		Request,
 		&RequestMemory
 	);
 	if (!NT_SUCCESS(Status)) {
 		TraceEvents(
-			TRACE_LEVEL_ERROR, 
-			TRACE_DRIVER, 
-			"%!FUNC! WdfRequestRetrieveOutputBuffer failed with %!STATUS!", 
+			TRACE_LEVEL_ERROR,
+			TRACE_DRIVER,
+			"%!FUNC! WdfRequestRetrieveOutputBuffer failed with %!STATUS!",
 			Status
 		);
 		goto exit;
 	}
 
-	full_report = (const struct TRACKPAD_COMBINED_REPORT_TYPE5 *) Buffer;
+	full_report = (const struct TRACKPAD_COMBINED_REPORT_TYPE5*)Buffer;
 	mt_report = &full_report->MTReport;
 
 	timestamp = (mt_report->TimestampHigh << 5) | mt_report->TimestampLow;
-	PtpReport.ScanTime = (USHORT) timestamp * 10;
-	PtpReport.IsButtonClicked = (UCHAR) mt_report->Button;
+	PtpReport.ScanTime = (USHORT)timestamp * 10;
+	PtpReport.IsButtonClicked = (UCHAR)mt_report->Button;
 
 	if (!DeviceContext->PrevPtpReportAuxAndSettingsInited)
 	{
@@ -508,8 +508,8 @@ AmtPtpServiceTouchInputInterruptType5(
 			f = &mt_report->Fingers[i];
 
 			// Sign extend
-			x = (SHORT) (f->AbsoluteX << 3) >> 3;
-			y = -(SHORT) (f->AbsoluteY << 3) >> 3;
+			x = (SHORT)(f->AbsoluteX << 3) >> 3;
+			y = -(SHORT)(f->AbsoluteY << 3) >> 3;
 
 			x = (x - DeviceContext->DeviceInfo->x.min) > 0 ? (x - DeviceContext->DeviceInfo->x.min) : 0;
 			y = (y - DeviceContext->DeviceInfo->y.min) > 0 ? (y - DeviceContext->DeviceInfo->y.min) : 0;
@@ -548,7 +548,7 @@ AmtPtpServiceTouchInputInterruptType5(
 				(DeviceContext->IgnoreButtonFinger == FALSE ? TRUE : (!DeviceContext->PrevIsButtonClicked || !PtpReport.IsButtonClicked)) &&
 				(DeviceContext->StopPressure == 0xffffffff ? TRUE : f->Pressure > DeviceContext->StopPressure) &&
 				(DeviceContext->StopSize == 0xffffffff ? TRUE : f->Size > DeviceContext->StopSize)
-			)
+				)
 			{
 				PPTP_REPORT_AUX contact;
 
@@ -620,17 +620,17 @@ AmtPtpServiceTouchInputInterruptType5(
 
 	// Write output
 	Status = WdfMemoryCopyFromBuffer(
-		RequestMemory, 
-		0, 
-		(PVOID) &PtpReport, 
+		RequestMemory,
+		0,
+		(PVOID)&PtpReport,
 		sizeof(PTP_REPORT)
 	);
 
 	if (!NT_SUCCESS(Status)) {
 		TraceEvents(
-			TRACE_LEVEL_ERROR, 
-			TRACE_DRIVER, 
-			"%!FUNC! WdfMemoryCopyFromBuffer failed with %!STATUS!", 
+			TRACE_LEVEL_ERROR,
+			TRACE_DRIVER,
+			"%!FUNC! WdfMemoryCopyFromBuffer failed with %!STATUS!",
 			Status
 		);
 		goto exit;
@@ -638,20 +638,20 @@ AmtPtpServiceTouchInputInterruptType5(
 
 	// Set result
 	WdfRequestSetInformation(
-		Request, 
+		Request,
 		sizeof(PTP_REPORT)
 	);
 
 	// Set completion flag
 	WdfRequestComplete(
-		Request, 
+		Request,
 		Status
 	);
 
 exit:
 	TraceEvents(
-		TRACE_LEVEL_INFORMATION, 
-		TRACE_DRIVER, 
+		TRACE_LEVEL_INFORMATION,
+		TRACE_DRIVER,
 		"%!FUNC! Exit"
 	);
 	return Status;
@@ -663,5 +663,5 @@ static inline INT AmtRawToInteger(
 	_In_ USHORT x
 )
 {
-	return (signed short) x;
+	return (signed short)x;
 }

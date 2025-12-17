@@ -10,7 +10,7 @@ AmtPtpGetDeviceConfig(
 )
 {
 	USHORT id = deviceInfo.idProduct;
-	const struct BCM5974_CONFIG *cfg;
+	const struct BCM5974_CONFIG* cfg;
 
 	for (cfg = Bcm5974ConfigTable; cfg->ansi; ++cfg) {
 		if (cfg->ansi == id || cfg->iso == id || cfg->jis == id) {
@@ -39,8 +39,8 @@ AmtPtpCreateDevice(
 	PAGED_CODE();
 
 	TraceEvents(
-		TRACE_LEVEL_INFORMATION, 
-		TRACE_DRIVER, 
+		TRACE_LEVEL_INFORMATION,
+		TRACE_DRIVER,
 		"%!FUNC! Entry"
 	);
 
@@ -57,8 +57,8 @@ AmtPtpCreateDevice(
 	WDF_OBJECT_ATTRIBUTES_INIT_CONTEXT_TYPE(&deviceAttributes, DEVICE_CONTEXT);
 
 	status = WdfDeviceCreate(
-		&DeviceInit, 
-		&deviceAttributes, 
+		&DeviceInit,
+		&deviceAttributes,
 		&device
 	);
 
@@ -87,7 +87,7 @@ AmtPtpCreateDevice(
 	WDF_DEVICE_PNP_CAPABILITIES_INIT(&pnpCaps);
 	pnpCaps.SurpriseRemovalOK = WdfTrue;
 	WdfDeviceSetPnpCapabilities(
-		device, 
+		device,
 		&pnpCaps
 	);
 
@@ -109,8 +109,8 @@ AmtPtpCreateDevice(
 	}
 
 	TraceEvents(
-		TRACE_LEVEL_INFORMATION, 
-		TRACE_DRIVER, 
+		TRACE_LEVEL_INFORMATION,
+		TRACE_DRIVER,
 		"%!FUNC! Exit"
 	);
 
@@ -137,8 +137,8 @@ AmtPtpEvtDevicePrepareHardware(
 	PAGED_CODE();
 
 	TraceEvents(
-		TRACE_LEVEL_INFORMATION, 
-		TRACE_DRIVER, 
+		TRACE_LEVEL_INFORMATION,
+		TRACE_DRIVER,
 		"%!FUNC! Entry"
 	);
 
@@ -153,9 +153,9 @@ AmtPtpEvtDevicePrepareHardware(
 
 		if (!NT_SUCCESS(status)) {
 			TraceEvents(
-				TRACE_LEVEL_ERROR, 
+				TRACE_LEVEL_ERROR,
 				TRACE_DRIVER,
-				"%!FUNC! WdfUsbTargetDeviceCreate failed with Status code %!STATUS!", 
+				"%!FUNC! WdfUsbTargetDeviceCreate failed with Status code %!STATUS!",
 				status
 			);
 			return status;
@@ -164,7 +164,7 @@ AmtPtpEvtDevicePrepareHardware(
 
 	// Retrieve device information
 	WdfUsbTargetDeviceGetDeviceDescriptor(
-		pDeviceContext->UsbDevice, 
+		pDeviceContext->UsbDevice,
 		&pDeviceContext->DeviceDescriptor
 	);
 
@@ -174,8 +174,8 @@ AmtPtpEvtDevicePrepareHardware(
 		if (pDeviceContext->DeviceInfo == NULL) {
 			status = STATUS_INVALID_DEVICE_STATE;
 			TraceEvents(
-				TRACE_LEVEL_ERROR, 
-				TRACE_DEVICE, 
+				TRACE_LEVEL_ERROR,
+				TRACE_DEVICE,
 				"%!FUNC! failed because device is not found in registry."
 			);
 			TraceLoggingWrite(
@@ -196,19 +196,19 @@ AmtPtpEvtDevicePrepareHardware(
 	//
 	WDF_USB_DEVICE_INFORMATION_INIT(&deviceInfo);
 	status = WdfUsbTargetDeviceRetrieveInformation(
-		pDeviceContext->UsbDevice, 
+		pDeviceContext->UsbDevice,
 		&deviceInfo
 	);
 
 	if (NT_SUCCESS(status)) {
 		TraceEvents(
-			TRACE_LEVEL_INFORMATION, 
-			TRACE_DEVICE, 
+			TRACE_LEVEL_INFORMATION,
+			TRACE_DEVICE,
 			"%!FUNC! IsDeviceHighSpeed: %s",
 			(deviceInfo.Traits & WDF_USB_DEVICE_TRAIT_AT_HIGH_SPEED) ? "TRUE" : "FALSE");
 
 		TraceEvents(
-			TRACE_LEVEL_INFORMATION, 
+			TRACE_LEVEL_INFORMATION,
 			TRACE_DEVICE,
 			"%!FUNC! IsDeviceSelfPowered: %s",
 			(deviceInfo.Traits & WDF_USB_DEVICE_TRAIT_SELF_POWERED) ? "TRUE" : "FALSE");
@@ -226,7 +226,8 @@ AmtPtpEvtDevicePrepareHardware(
 		// Save these for use later.
 		//
 		pDeviceContext->UsbDeviceTraits = deviceInfo.Traits;
-	} else {
+	}
+	else {
 		pDeviceContext->UsbDeviceTraits = 0;
 	}
 
@@ -265,7 +266,7 @@ AmtPtpGetWellspringMode(
 	WDF_MEMORY_DESCRIPTOR			memoryDescriptor;
 	ULONG							cbTransferred;
 	WDFMEMORY						bufHandle = NULL;
-	unsigned char*					buffer;
+	unsigned char* buffer;
 
 	status = STATUS_SUCCESS;
 
@@ -443,7 +444,7 @@ AmtPtpSetWellspringMode(
 	WDF_MEMORY_DESCRIPTOR			memoryDescriptor;
 	ULONG							cbTransferred;
 	WDFMEMORY						bufHandle = NULL;
-	unsigned char*					buffer;
+	unsigned char* buffer;
 
 	if (IsWellspringModeOn)
 	{
@@ -454,8 +455,8 @@ AmtPtpSetWellspringMode(
 	}
 
 	TraceEvents(
-		TRACE_LEVEL_INFORMATION, 
-		TRACE_DRIVER, 
+		TRACE_LEVEL_INFORMATION,
+		TRACE_DRIVER,
 		"%!FUNC! Entry"
 	);
 
@@ -467,11 +468,11 @@ AmtPtpSetWellspringMode(
 	}
 
 	status = WdfMemoryCreate(
-		WDF_NO_OBJECT_ATTRIBUTES, 
-		PagedPool, 
-		POOL_TAG_PTP_CONTROL, 
-		DeviceContext->DeviceInfo->um_size, 
-		&bufHandle, 
+		WDF_NO_OBJECT_ATTRIBUTES,
+		PagedPool,
+		POOL_TAG_PTP_CONTROL,
+		DeviceContext->DeviceInfo->um_size,
+		&bufHandle,
 		&buffer
 	);
 
@@ -480,34 +481,34 @@ AmtPtpSetWellspringMode(
 	}
 
 	RtlZeroMemory(
-		buffer, 
+		buffer,
 		DeviceContext->DeviceInfo->um_size
 	);
 
 	WDF_MEMORY_DESCRIPTOR_INIT_BUFFER(
-		&memoryDescriptor, 
-		buffer, 
+		&memoryDescriptor,
+		buffer,
 		sizeof(DeviceContext->DeviceInfo->um_size)
 	);
 
 	WDF_USB_CONTROL_SETUP_PACKET_INIT(
-		&setupPacket, 
-		BmRequestDeviceToHost, 
+		&setupPacket,
+		BmRequestDeviceToHost,
 		BmRequestToInterface,
 		BCM5974_WELLSPRING_MODE_READ_REQUEST_ID,
-		(USHORT) DeviceContext->DeviceInfo->um_req_val, 
-		(USHORT) DeviceContext->DeviceInfo->um_req_idx
+		(USHORT)DeviceContext->DeviceInfo->um_req_val,
+		(USHORT)DeviceContext->DeviceInfo->um_req_idx
 	);
 
 	// Set stuffs right
 	setupPacket.Packet.bm.Request.Type = BmRequestClass;
 
 	status = WdfUsbTargetDeviceSendControlTransferSynchronously(
-		DeviceContext->UsbDevice, 
-		WDF_NO_HANDLE, 
-		NULL, 
-		&setupPacket, 
-		&memoryDescriptor, 
+		DeviceContext->UsbDevice,
+		WDF_NO_HANDLE,
+		NULL,
+		&setupPacket,
+		&memoryDescriptor,
 		&cbTransferred
 	);
 
@@ -515,9 +516,9 @@ AmtPtpSetWellspringMode(
 	// So we do not check um_size as a temporary workaround.
 	if (!NT_SUCCESS(status)) {
 		TraceEvents(
-			TRACE_LEVEL_ERROR, 
-			TRACE_DEVICE, 
-			"%!FUNC! WdfUsbTargetDeviceSendControlTransferSynchronously (Read) failed with %!STATUS!, cbTransferred = %llu, um_size = %d", 
+			TRACE_LEVEL_ERROR,
+			TRACE_DEVICE,
+			"%!FUNC! WdfUsbTargetDeviceSendControlTransferSynchronously (Read) failed with %!STATUS!, cbTransferred = %llu, um_size = %d",
 			status,
 			cbTransferred,
 			DeviceContext->DeviceInfo->um_size
@@ -527,36 +528,36 @@ AmtPtpSetWellspringMode(
 
 	// Apply the mode switch
 	buffer[DeviceContext->DeviceInfo->um_switch_idx] = IsWellspringModeOn ?
-		(unsigned char) DeviceContext->DeviceInfo->um_switch_on : 
-		(unsigned char) DeviceContext->DeviceInfo->um_switch_off;
+		(unsigned char)DeviceContext->DeviceInfo->um_switch_on :
+		(unsigned char)DeviceContext->DeviceInfo->um_switch_off;
 
 	// Write configuration
 	WDF_USB_CONTROL_SETUP_PACKET_INIT(
-		&setupPacket, 
-		BmRequestHostToDevice, 
+		&setupPacket,
+		BmRequestHostToDevice,
 		BmRequestToInterface,
 		BCM5974_WELLSPRING_MODE_WRITE_REQUEST_ID,
-		(USHORT) DeviceContext->DeviceInfo->um_req_val, 
-		(USHORT) DeviceContext->DeviceInfo->um_req_idx
+		(USHORT)DeviceContext->DeviceInfo->um_req_val,
+		(USHORT)DeviceContext->DeviceInfo->um_req_idx
 	);
 
 	// Set stuffs right
 	setupPacket.Packet.bm.Request.Type = BmRequestClass;
 
 	status = WdfUsbTargetDeviceSendControlTransferSynchronously(
-		DeviceContext->UsbDevice, 
-		WDF_NO_HANDLE, 
-		NULL, 
-		&setupPacket, 
-		&memoryDescriptor, 
+		DeviceContext->UsbDevice,
+		WDF_NO_HANDLE,
+		NULL,
+		&setupPacket,
+		&memoryDescriptor,
 		&cbTransferred
 	);
 
 	if (!NT_SUCCESS(status)) {
 		TraceEvents(
-			TRACE_LEVEL_ERROR, 
-			TRACE_DEVICE, 
-			"%!FUNC! WdfUsbTargetDeviceSendControlTransferSynchronously (Write) failed with %!STATUS!", 
+			TRACE_LEVEL_ERROR,
+			TRACE_DEVICE,
+			"%!FUNC! WdfUsbTargetDeviceSendControlTransferSynchronously (Write) failed with %!STATUS!",
 			status
 		);
 		goto cleanup;
@@ -724,8 +725,8 @@ AmtPtpEvtDeviceD0Entry(
 	isTargetStarted = FALSE;
 
 	TraceEvents(
-		TRACE_LEVEL_INFORMATION, 
-		TRACE_DRIVER, 
+		TRACE_LEVEL_INFORMATION,
+		TRACE_DRIVER,
 		"%!FUNC! -->AmtPtpDeviceEvtDeviceD0Entry - coming from %s",
 		DbgDevicePowerString(PreviousState)
 	);
@@ -765,9 +766,9 @@ AmtPtpEvtDeviceD0Entry(
 	status = WdfIoTargetStart(WdfUsbTargetPipeGetIoTarget(pDeviceContext->InterruptPipe));
 	if (!NT_SUCCESS(status)) {
 		TraceEvents(
-			TRACE_LEVEL_ERROR, 
-			TRACE_DRIVER, 
-			"%!FUNC! <--AmtPtpDeviceEvtDeviceD0Entry - Failed to start interrupt pipe %!STATUS!", 
+			TRACE_LEVEL_ERROR,
+			TRACE_DRIVER,
+			"%!FUNC! <--AmtPtpDeviceEvtDeviceD0Entry - Failed to start interrupt pipe %!STATUS!",
 			status
 		);
 		goto End;
@@ -784,15 +785,15 @@ End:
 		//
 		if (isTargetStarted) {
 			WdfIoTargetStop(
-				WdfUsbTargetPipeGetIoTarget(pDeviceContext->InterruptPipe), 
+				WdfUsbTargetPipeGetIoTarget(pDeviceContext->InterruptPipe),
 				WdfIoTargetCancelSentIo
 			);
 		}
 	}
 
 	TraceEvents(
-		TRACE_LEVEL_INFORMATION, 
-		TRACE_DRIVER, 
+		TRACE_LEVEL_INFORMATION,
+		TRACE_DRIVER,
 		"%!FUNC! <--AmtPtpDeviceEvtDeviceD0Entry"
 	);
 
@@ -812,9 +813,9 @@ AmtPtpEvtDeviceD0Exit(
 	status = STATUS_SUCCESS;
 
 	TraceEvents(
-		TRACE_LEVEL_INFORMATION, 
+		TRACE_LEVEL_INFORMATION,
 		TRACE_DRIVER,
-		"%!FUNC! -->AmtPtpDeviceEvtDeviceD0Exit - moving to %s", 
+		"%!FUNC! -->AmtPtpDeviceEvtDeviceD0Exit - moving to %s",
 		DbgDevicePowerString(TargetState)
 	);
 
@@ -848,8 +849,8 @@ AmtPtpEvtDeviceD0Exit(
 	}
 
 	TraceEvents(
-		TRACE_LEVEL_INFORMATION, 
-		TRACE_DRIVER, 
+		TRACE_LEVEL_INFORMATION,
+		TRACE_DRIVER,
 		"%!FUNC! <--AmtPtpDeviceEvtDeviceD0Exit"
 	);
 
@@ -883,7 +884,7 @@ SelectInterruptInterface(
 	if (NULL == usbInterface) {
 		status = STATUS_UNSUCCESSFUL;
 		TraceEvents(
-			TRACE_LEVEL_ERROR, 
+			TRACE_LEVEL_ERROR,
 			TRACE_DEVICE,
 			"%!FUNC! WdfUsbTargetDeviceGetInterface 0 failed %!STATUS!",
 			status
@@ -929,9 +930,9 @@ SelectInterruptInterface(
 	if (!pDeviceContext->InterruptPipe) {
 		status = STATUS_INVALID_DEVICE_STATE;
 		TraceEvents(
-			TRACE_LEVEL_ERROR, 
-			TRACE_DEVICE, 
-			"%!FUNC! Device is not configured properly %!STATUS!", 
+			TRACE_LEVEL_ERROR,
+			TRACE_DEVICE,
+			"%!FUNC! Device is not configured properly %!STATUS!",
 			status
 		);
 
@@ -984,14 +985,14 @@ AmtPtpEmergResetDevice(
 		"%!FUNC! Entry");
 
 	status = AmtPtpSetWellspringMode(
-		DeviceContext, 
+		DeviceContext,
 		FALSE);
 
 	if (!NT_SUCCESS(status)) {
 		TraceEvents(
-			TRACE_LEVEL_ERROR, 
-			TRACE_DEVICE, 
-			"%!FUNC! AmtPtpSetWellspringMode failed with %!STATUS!", 
+			TRACE_LEVEL_ERROR,
+			TRACE_DEVICE,
+			"%!FUNC! AmtPtpSetWellspringMode failed with %!STATUS!",
 			status);
 	}
 
@@ -1008,8 +1009,8 @@ AmtPtpEmergResetDevice(
 	}
 
 	TraceEvents(
-		TRACE_LEVEL_INFORMATION, 
-		TRACE_DRIVER, 
+		TRACE_LEVEL_INFORMATION,
+		TRACE_DRIVER,
 		"%!FUNC! Exit");
 
 	return status;

@@ -148,7 +148,7 @@ __declspec(align(2)) struct TRACKPAD_FINGER {
 #pragma warning( disable : 4200 )
 
 /* Trackpad finger structure for type5 (magic trackpad) */
-struct TRACKPAD_FINGER_TYPE5 
+struct TRACKPAD_FINGER_TYPE5
 {
 	UINT32 AbsoluteX : 13;		/* absolute x coordinate */
 	UINT32 AbsoluteY : 13;		/* absolute y coordinate */
@@ -174,7 +174,7 @@ struct MOUSE_REPORT
 };
 
 /* Multitouch report from MT2 */
- struct TRACKPAD_REPORT_TYPE5
+struct TRACKPAD_REPORT_TYPE5
 {
 	UCHAR ReportId;
 	UINT8 Button : 1;
