@@ -147,12 +147,14 @@ typedef struct _PTP_CONTACT {
 	UCHAR		Confidence : 1;
 	UCHAR		TipSwitch  : 1;
 	UCHAR		Padding    : 6;
+	UCHAR		Pressure;
 	ULONG		ContactID;
 	USHORT		X;
 	USHORT		Y;
 } PTP_CONTACT, *PPTP_CONTACT;
 #pragma pack()
 
+#pragma pack(1)
 typedef struct _PTP_REPORT {
 	UCHAR       ReportID;
 	PTP_CONTACT Contacts[5];
@@ -160,6 +162,7 @@ typedef struct _PTP_REPORT {
 	UCHAR       ContactCount;
 	UCHAR       IsButtonClicked;
 } PTP_REPORT, *PPTP_REPORT;
+#pragma pack()
 
 typedef struct _PTP_USERMODEAPP_CONF_REPORT {
 	UCHAR		ReportID;

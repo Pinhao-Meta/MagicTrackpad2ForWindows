@@ -533,6 +533,9 @@ AmtPtpServiceTouchInputInterruptType5(
 			// BOOL valid_finger = f->Finger != 6;
 			PtpReport.Contacts[i].Confidence = DeviceContext->PalmRejection == FALSE ? TRUE : f->Finger != 6; // valid_size && valid_finger;
 
+			// Pressure
+			PtpReport.Contacts[i].Pressure = f->Pressure;
+
 #define UINT32_SET_MSB(v) ((UINT32)v | ((UINT32)1 << 31))
 
 			PPTP_REPORT_AUX prev_contact = NULL;
@@ -603,7 +606,7 @@ AmtPtpServiceTouchInputInterruptType5(
 				AmtRawToInteger(f->TouchMinor) << 1,
 				f->Finger,
 				f->Orientation,
-				f->Pressure,
+				PtpReport.Contacts[i].Pressure,
 				f->Size
 			);
 //#endif

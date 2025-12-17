@@ -15,11 +15,19 @@
 		REPORT_COUNT, 0x06, /* Report Count: 6 */ \
 		INPUT, 0x03, /* Input: (Const, Var, Abs) */ \
 		/* End of a byte */ \
+		/* Begin a byte */ \
+		USAGE, 0x30, /* Usage: Pressure */ \
+		LOGICAL_MINIMUM, 0x00, /* Logical Minimum: 0 */ \
+		LOGICAL_MAXIMUM, 0xff, /* Logical Maximum: 255 */ \
+		REPORT_SIZE, 0x08, /* Report Size: 8 */ \
+		REPORT_COUNT, 0x01, /* Report Count: 1 */ \
+		INPUT, 0x02, /* Input: (Data, Var, Abs) */ \
+		/* End of a byte */ \
 		/* Begin of 4 bytes */ \
 		REPORT_COUNT, 0x01, /* Report Count: 1 */ \
 		REPORT_SIZE, 0x20, /* Report Size: 0x20 (4 bytes) */ \
 		LOGICAL_MAXIMUM_3, 0xff, 0xff, 0xff, 0xff, /* Logical Maximum: 0xffffffff */ \
-		USAGE, 0x51, /* Usage: Contract Identifier */ \
+		USAGE, 0x51, /* Usage: Contact Identifier */ \
 		INPUT, 0x02, /* Input: (Data, Var, Abs) */ \
 		/* End of 4 bytes */ \
 		/* Begin of 4 bytes */ \
@@ -56,11 +64,19 @@
 		REPORT_COUNT, 0x06, /* Report Count: 6 */ \
 		INPUT, 0x03, /* Input: (Const, Var, Abs) */ \
 		/* End of a byte */ \
+		/* Begin a byte */ \
+		USAGE, 0x30, /* Usage: Pressure */ \
+		LOGICAL_MINIMUM, 0x00, /* Logical Minimum: 0 */ \
+		LOGICAL_MAXIMUM, 0xff, /* Logical Maximum: 255 */ \
+		REPORT_SIZE, 0x08, /* Report Size: 8 */ \
+		REPORT_COUNT, 0x01, /* Report Count: 1 */ \
+		INPUT, 0x02, /* Input: (Data, Var, Abs) */ \
+		/* End of a byte */ \
 		/* Begin of 4 bytes */ \
 		REPORT_COUNT, 0x01, /* Report Count: 1 */ \
 		REPORT_SIZE, 0x20, /* Report Size: 0x20 (4 bytes) */ \
 		LOGICAL_MAXIMUM_3, 0xff, 0xff, 0xff, 0xff, /* Logical Maximum: 0xffffffff */ \
-		USAGE, 0x51, /* Usage: Contract Identifier */ \
+		USAGE, 0x51, /* Usage: Contact Identifier */ \
 		INPUT, 0x02, /* Input: (Data, Var, Abs) */ \
 		/* End of 4 bytes */ \
 		/* Begin of 4 bytes */ \
